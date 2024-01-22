@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app_todo/pages/home.dart';
+import 'package:flutter_app_todo/pages/main_screen.dart';
 
 void main() => runApp(MaterialApp(
       theme: ThemeData(
@@ -7,5 +8,9 @@ void main() => runApp(MaterialApp(
         useMaterial3: true,
         fontFamily: 'Osward',
       ),
-      home: Home(),
+      initialRoute: '/',
+      routes: {
+        '/': (context) => const MainScreen(),
+        '/todo': (context) => const Home(),
+      },
     ));
