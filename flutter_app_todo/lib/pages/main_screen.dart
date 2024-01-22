@@ -17,15 +17,18 @@ class MainScreen extends StatelessWidget {
           centerTitle: true,
           backgroundColor: Theme.of(context).primaryColor,
         ),
-        body: Column(
-          children: [
-            const ModifyText('Главная страница'),
-            ElevatedButton(
-                onPressed: () {
-                  Navigator.pushReplacementNamed(context, '/todo');
-                },
-                child: const ModifyText('Перейти далее'))
-          ],
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const ModifyText('Главная страница'),
+              ElevatedButton(
+                  onPressed: () {
+                    Navigator.pushReplacementNamed(context, '/todo');
+                  },
+                  child: const ModifyText('Перейти к задачам'))
+            ],
+          ),
         ));
   }
 }

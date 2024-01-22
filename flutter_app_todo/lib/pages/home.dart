@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app_todo/widgets/ModifyText.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -12,18 +11,6 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   String _userCurrentValue = '';
-
-  void initFirebase() async {
-    WidgetsFlutterBinding.ensureInitialized();
-    await Firebase.initializeApp();
-  }
-
-  @override
-  void initState() {
-    super.initState();
-
-    initFirebase();
-  }
 
   void _removeElement(String idx) {
     FirebaseFirestore.instance
