@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app_todo/widgets/ModifyText.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -10,19 +12,23 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   String _userCurrentValue = '';
-  List todoList = [];
+
+  void initFirebase() async {
+    WidgetsFlutterBinding.ensureInitialized();
+    await Firebase.initializeApp();
+  }
 
   @override
   void initState() {
     super.initState();
 
-    todoList.addAll(['Buy milk', 'Купить снеки']);
+    initFirebase();
   }
 
-  void _removeElement(int idx) {
-    setState(() {
-      todoList.removeAt(idx);
-    });
+  void _removeElement(String idx) {
+    FirebaseFirestore.instance
+          .collection('items')
+          .doc(idx).delete();
   }
 
   void _menuOpen() {
@@ -43,7 +49,8 @@ class _HomeState extends State<Home> {
             ElevatedButton(
                 onPressed: () {
                   Navigator.pop(context);
-                  Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
+                  Navigator.pushNamedAndRemoveUntil(
+                      context, '/', (route) => false);
                 },
                 child: const ModifyText('На главную!')),
           ],
@@ -56,9 +63,9 @@ class _HomeState extends State<Home> {
     if (_userCurrentValue == '') {
       Navigator.of(context).pop();
     } else {
-      setState(() {
-        todoList.add(_userCurrentValue);
-      });
+      FirebaseFirestore.instance
+          .collection('items')
+          .add({'task': _userCurrentValue});
 
       Navigator.of(context).pop();
       _userCurrentValue = '';
@@ -85,28 +92,34 @@ class _HomeState extends State<Home> {
           )
         ],
       ),
-      body: ListView.builder(
-          itemCount: todoList.length,
-          itemBuilder: (BuildContext context, int index) {
-            return Dismissible(
-              key: Key(todoList[index]),
-              child: Card(
-                child: ListTile(
-                  title: ModifyText(todoList[index]),
-                  trailing: IconButton(
-                    icon: Icon(Icons.delete_sweep,
-                        color: Theme.of(context).primaryColor),
-                    onPressed: () {
-                      _removeElement(index);
-                    },
+      body: StreamBuilder(
+        stream: FirebaseFirestore.instance.collection('items').snapshots(),
+        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+          if (!snapshot.hasData) return const ModifyText('Нет записей');
+          return ListView.builder(
+              itemCount: snapshot.data?.docs.length,
+              itemBuilder: (BuildContext context, int index) {
+                return Dismissible(
+                  key: Key(snapshot.data!.docs[index].id),
+                  child: Card(
+                    child: ListTile(
+                      title: ModifyText(snapshot.data!.docs[index].get('task')),
+                      trailing: IconButton(
+                        icon: Icon(Icons.delete_sweep,
+                            color: Theme.of(context).primaryColor),
+                        onPressed: () {
+                          _removeElement(snapshot.data!.docs[index].id);
+                        },
+                      ),
+                    ),
                   ),
-                ),
-              ),
-              onDismissed: (direction) {
-                _removeElement(index);
-              },
-            );
-          }),
+                  onDismissed: (direction) {
+                    _removeElement(snapshot.data!.docs[index].id);
+                  },
+                );
+              });
+        },
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           showDialog(
