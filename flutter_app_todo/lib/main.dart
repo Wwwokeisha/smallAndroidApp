@@ -1,42 +1,54 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app_todo/pages/home.dart';
 
-void main() => runApp(const NewApp());
+void main() => runApp(MaterialApp(
+  theme: ThemeData(
+    primaryColor: Colors.deepPurple,
+    useMaterial3: true,
+    fontFamily: 'Osward',
+  ),
+  home: Home(),
+));
 
-class NewApp extends StatelessWidget {
-  const NewApp({super.key});
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text(
-            'Your Todo',
-            style: TextStyle(
-              fontSize: 20,
-              fontFamily: 'Oswald',
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          centerTitle: true,
-          backgroundColor: Colors.deepPurple,
-        ),
-        body: Center(),
-        floatingActionButton: FloatingActionButton(
-          child: Text('Click'),
-          backgroundColor: Colors.deepPurple,
-          onPressed: () {
-            print('Clicked');
-          },
-        ),
-      ),
-    );
-  }
-}
+// class NewApp extends StatelessWidget {
+//   const NewApp({super.key});
+//   @override
+//   Widget build(BuildContext context) {
+//     return MaterialApp(
+//       theme: ThemeData(
+//         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+//         useMaterial3: true,
+//       ),
+//       home: Scaffold(
+//         appBar: AppBar(
+//           title: const Text(
+//             'Your Todo',
+//             style: TextStyle(
+//               fontSize: 20,
+//               fontFamily: 'Oswald',
+//               color: Colors.white,
+//               fontWeight: FontWeight.bold,
+//             ),
+//           ),
+//           centerTitle: true,
+//           backgroundColor: Colors.deepPurple,
+//         ),
+//         body: Container(
+//           // child: Container(),
+//           // child: TextButton(),
+//           // child: Icon(Icons.settings_applications_sharp, size: 45, color: Colors.blueGrey),
+//         ),
+//         floatingActionButton: FloatingActionButton(
+//           child: Text('Click'),
+//           backgroundColor: Colors.deepPurple,
+//           onPressed: () {
+//             print('Clicked');
+//           },
+//         ),
+//       ),
+//     );
+//   }
+// }
 
 
 /**
